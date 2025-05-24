@@ -1,5 +1,8 @@
 // src/utils/mongoose.ts
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config({});
 
 let cached = {
   adminConnection: null as null | mongoose.Connection,
@@ -8,16 +11,23 @@ let cached = {
 
 export default function ConnectDB() {
   if (cached.adminConnection && cached.sellerConnection) {
+    // console.log(cached);
     return cached;
   }
 
-  const sellerConnection = mongoose.createConnection(process.env.MONGO_DB_URI_SELLER!);
-  const adminConnection = mongoose.createConnection(process.env.MONGO_DB_URI_ADMIN!);
+  const sellerConnection = mongoose.createConnection(
+    process.env.MONGO_DB_URI_SELLER!
+  );
+  const adminConnection = mongoose.createConnection(
+    process.env.MONGO_DB_URI_ADMIN!
+  );
 
   sellerConnection.on("connected", () => console.log("✅ Seller DB connected"));
   adminConnection.on("connected", () => console.log("✅ Admin DB connected"));
 
-  sellerConnection.on("error", (err) => console.error("❌ Seller DB error", err));
+  sellerConnection.on("error", (err) =>
+    console.error("❌ Seller DB error", err)
+  );
   adminConnection.on("error", (err) => console.error("❌ Admin DB error", err));
 
   process.on("SIGINT", async () => {

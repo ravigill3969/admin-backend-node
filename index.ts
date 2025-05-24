@@ -1,13 +1,17 @@
 import express from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import userRouter from "./router/user";
 import ConnectDB from "./utils/mongoose";
+import cookieParser from "cookie-parser";
+
 dotenv.config({});
 
-const { adminConnection, sellerConnection } = ConnectDB();
+ConnectDB();
 
 const app = express();
+
+app.use(cookieParser());
+app.use(express.json({ limit: "34kb" }));
 
 app.use("/admin/user", userRouter);
 

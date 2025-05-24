@@ -10,6 +10,7 @@ export interface IAdminUser extends Document {
   isActiveAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
+  isApproved: Boolean;
 }
 
 const AdminUserSchema = new Schema<IAdminUser>(
@@ -23,16 +24,17 @@ const AdminUserSchema = new Schema<IAdminUser>(
     },
     password: { type: String, required: true, minlength: 3 },
     isActiveAdmin: { type: Boolean, default: true },
+    isApproved: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-let AdminUser;
-
-if (adminConnection) {
-  const AdminUser: Model<IAdminUser> =
-    adminConnection.models.AdminUser ||
-    adminConnection.model<IAdminUser>("AdminUser", AdminUserSchema);
+if (!adminConnection) {
+  throw new Error("Admin DB connection is not established yet");
 }
+
+const AdminUser: Model<IAdminUser> =
+  adminConnection.models.AdminUser ||
+  adminConnection.model<IAdminUser>("AdminUser", AdminUserSchema);
 
 export default AdminUser;
