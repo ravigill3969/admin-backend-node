@@ -1,0 +1,45 @@
+# Node modules
+node_modules/
+
+# Output directories
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# dotenv environment variables
+.env
+.env.*.local
+
+# TypeScript cache
+*.tsbuildinfo
+
+# VSCode settings
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+
+# Optional: IntelliJ/WebStorm
+.idea/
+
+# Optional: Mac/Linux file metadata
+*.swp
+
+
+# ts-node-dev cache
+.tmp/
