@@ -51,3 +51,20 @@ export const login = async (
     .json({ message: "Logged in successfully" });
   return;
 };
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res
+    .cookie("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 0, // Immediately expire the cookie
+    })
+    .status(200)
+    .json({ message: "Logged out successfully" });
+};
+
