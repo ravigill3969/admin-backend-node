@@ -68,3 +68,41 @@ export const logout = async (
     .json({ message: "Logged out successfully" });
 };
 
+export const updateEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // const userId = req.user?.id; // Assuming req.user is set by auth middleware
+    const { newEmail } = req.body;
+
+    if (!newEmail || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(newEmail)) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    const existingUser = await AdminUser.findOne({ email: newEmail });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email already in use" });
+    }
+
+    const updatedUser = await AdminUser.findByIdAndUpdate(
+      userId,
+      { email: newEmail },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Email updated successfully",
+        email: updatedUser.email,
+      });
+  } catch (err) {
+    next(err);
+  }
+};
