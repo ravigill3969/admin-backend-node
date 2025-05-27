@@ -96,13 +96,30 @@ export const updateEmail = async (
       return res.status(404).json({ message: "User not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Email updated successfully",
-        email: updatedUser.email,
-      });
+    res.status(200).json({
+      message: "Email updated successfully",
+      email: updatedUser.email,
+    });
   } catch (err) {
     next(err);
+  }
+};
+
+export const verifyToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Token missing" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    req.user = decoded; // Attach user data to req if needed
+    res.status(200).json({ message: "Token verified", user: decoded });
+  } catch (err) {
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
