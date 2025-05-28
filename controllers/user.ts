@@ -74,7 +74,7 @@ export const updateEmail = async (
   next: NextFunction
 ) => {
   try {
-    // const userId = req.user?.id; // Assuming req.user is set by auth middleware
+    const userId = req.user;
     const { newEmail } = req.body;
 
     if (!newEmail || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(newEmail)) {
@@ -102,24 +102,5 @@ export const updateEmail = async (
     });
   } catch (err) {
     next(err);
-  }
-};
-
-export const verifyToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Token missing" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded; // Attach user data to req if needed
-    res.status(200).json({ message: "Token verified", user: decoded });
-  } catch (err) {
-    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
