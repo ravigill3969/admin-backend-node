@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import AdminUser from "../models/user";
@@ -74,16 +73,18 @@ export const updateEmail = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.user;
+    const userId: string = req.user;
     const { newEmail } = req.body;
 
-    if (!newEmail || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(newEmail)) {
-      return res.status(400).json({ message: "Invalid email address" });
+    if (!newEmail) {
+      res.status(400).json({ message: "Invalid email address" });
+      return;
     }
 
     const existingUser = await AdminUser.findOne({ email: newEmail });
     if (existingUser) {
-      return res.status(409).json({ message: "Email already in use" });
+      res.status(409).json({ message: "Email already in use" });
+      return;
     }
 
     const updatedUser = await AdminUser.findByIdAndUpdate(
@@ -93,7 +94,8 @@ export const updateEmail = async (
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "User not found" });
+      return;
     }
 
     res.status(200).json({

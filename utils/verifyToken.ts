@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-// Extend Express request to include user as string (user ID)
 declare global {
   namespace Express {
     interface Request {
-      user?: string;
+      user: string;
     }
   }
 }
@@ -19,7 +18,8 @@ export const verifyToken = (
     const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: "Token missing" });
+      res.status(401).json({ message: "Token missing" });
+      return;
     }
 
     const decoded = jwt.verify(
@@ -29,15 +29,15 @@ export const verifyToken = (
 
     const userId = decoded.id;
     if (!userId) {
-      return res.status(400).json({ message: "Invalid token payload" });
+      res.status(400).json({ message: "Invalid token payload" });
+      return;
     }
 
     req.user = userId;
 
-    return res.status(200).json({ message: "Token verified", user: userId });
-    // Or use `next()` if it's middleware
-    // next();
+    next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+    res.status(401).json({ message: "Invalid or expired token" });
+    return;
   }
 };
