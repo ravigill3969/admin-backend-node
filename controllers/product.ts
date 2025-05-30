@@ -84,3 +84,37 @@ export const makeProductActiveWithId = async (
     return;
   }
 };
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { sellerConnection } = await ConnectDB();
+
+    const { id } = req.body;
+
+    const product = await sellerConnection
+      ?.collection("products")
+      .findOneAndDelete({
+        _id: id,
+      });
+
+    if (!product) {
+      res.status(400).json({ message: "Invalid id" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error",
+      status: false,
+    });
+    return;
+  }
+};
