@@ -27,8 +27,9 @@ export const verifyToken = (
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    const userId = decoded.id;
+    const userId = decoded.email;
     if (!userId) {
+      console.log(decoded);
       res.status(400).json({ message: "Invalid token payload" });
       return;
     }

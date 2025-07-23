@@ -33,6 +33,13 @@ export const login = async (
   //     });
   //   }
 
+  // if (!user) {
+  //   res.status(200).json({
+  //     message: "User cannot found",
+  //   });
+  //   return;
+  // }
+
   const payload = { email, role: "admin" };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET!, {

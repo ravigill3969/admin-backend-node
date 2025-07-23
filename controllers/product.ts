@@ -30,7 +30,6 @@ export const inActiveProducts = async (
   } catch (error) {
     res.status(500).json({
       message: "Something went wrong!",
-      status: false,
     });
   }
 };
@@ -70,6 +69,8 @@ export const makeProductActiveWithId = async (
       res.status(400).json({ message: "Invalid id" });
       return;
     }
+
+    console.log(product);
 
     res.status(200).json({
       message: "success",
