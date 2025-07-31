@@ -4,7 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 declare global {
   namespace Express {
     interface Request {
-      user: string;
+      userEmail: string;
     }
   }
 }
@@ -27,14 +27,14 @@ export const verifyToken = (
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    const userId = decoded.email;
-    if (!userId) {
+    const userEmail = decoded.email;
+    if (!userEmail) {
       console.log(decoded);
       res.status(400).json({ message: "Invalid token payload" });
       return;
     }
 
-    req.user = userId;
+    req.userEmail = userEmail;
 
     next();
   } catch (err) {

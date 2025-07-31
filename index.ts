@@ -25,6 +25,10 @@ app.use(express.json({ limit: "34kb" }));
 app.use("/admin/user", userRouter);
 app.use("/admin/product", productRouter);
 
-app.listen(process.env.PORT, () => {
-  console.log("object", process.env.PORT);
+const s = app.listen(process.env.PORT, () => {
+  console.log("server is running on http://localhost:", process.env.PORT);
 });
+
+s.addListener("connect", ()=>{
+  console.log("yes")
+})
