@@ -155,3 +155,15 @@ export const register = async (
     .json({ message: "Registered successfully", id: newUser._id });
   return;
 };
+
+export const verifyUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userEmail = await req.userEmail;
+
+  res.status(200).json({
+    email: userEmail,
+  });
+};
